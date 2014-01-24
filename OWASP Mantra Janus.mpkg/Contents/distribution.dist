@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<installer-script authoringTool="Packages" authoringToolVersion="1.1.1" authoringToolBuild="2B71" minSpecVersion="1.0">
+    <options customize="always"/>
+    <installation-check script="installation_check()"/>
+    <!--+==========================+
+        |       Presentation       |
+        +==========================+-->
+    <title>DISTRIBUTION_TITLE</title>
+    <!--+==========================+
+        |         Installer        |
+        +==========================+-->
+    <choices-outline>
+        <line choice="installer_choice_1"/>
+        <line choice="installer_choice_2"/>
+        <line choice="installer_choice_3"/>
+        <line choice="installer_choice_4"/>
+        <line choice="installer_choice_5"/>
+        <line choice="installer_choice_6"/>
+        <line choice="installer_choice_7"/>
+        <line choice="installer_choice_8"/>
+        <line choice="installer_choice_9"/>
+        <line choice="installer_choice_10"/>
+    </choices-outline>
+    <choice id="installer_choice_1" start_enabled="false" start_selected="true" title="Mantra" description="">
+        <pkg-ref id="com.getmantra.pkg.Mantra"/>
+    </choice>
+    <choice id="installer_choice_2" start_selected="installer_choice_2_selected(true)" selected="installer_choice_2_selected(false)" title="INSTALLER_CHOICE_2_TITLE" description="">
+        <pkg-ref id="com.getmantra.pkg.en"/>
+    </choice>
+    <choice id="installer_choice_3" start_selected="installer_choice_3_selected(true)" selected="installer_choice_3_selected(false)" title="Arabic" description="">
+        <pkg-ref id="com.getmantra.pkg.ar"/>
+    </choice>
+    <choice id="installer_choice_4" start_selected="installer_choice_4_selected(true)" selected="installer_choice_4_selected(false)" title="French" description="">
+        <pkg-ref id="com.getmantra.pkg.fr"/>
+    </choice>
+    <choice id="installer_choice_5" start_selected="installer_choice_5_selected(true)" selected="installer_choice_5_selected(false)" title="Chinese - Simplified" description="">
+        <pkg-ref id="com.getmantra.pkg.zhcn"/>
+    </choice>
+    <choice id="installer_choice_6" start_selected="installer_choice_6_selected(true)" selected="installer_choice_6_selected(false)" title="Chinese - Traditional" description="">
+        <pkg-ref id="com.getmantra.pkg.zhtw"/>
+    </choice>
+    <choice id="installer_choice_7" start_selected="installer_choice_7_selected(true)" selected="installer_choice_7_selected(false)" title="Portuguese" description="">
+        <pkg-ref id="com.getmantra.pkg.pt"/>
+    </choice>
+    <choice id="installer_choice_8" start_selected="installer_choice_8_selected(true)" selected="installer_choice_8_selected(false)" title="Russian" description="">
+        <pkg-ref id="com.getmantra.pkg.ru"/>
+    </choice>
+    <choice id="installer_choice_9" start_selected="installer_choice_9_selected(true)" selected="installer_choice_9_selected(false)" title="Spanish" description="">
+        <pkg-ref id="com.getmantra.pkg.es"/>
+    </choice>
+    <choice id="installer_choice_10" start_selected="installer_choice_10_selected(true)" selected="installer_choice_10_selected(false)" title="Turkish" description="">
+        <pkg-ref id="com.getmantra.pkg.tr"/>
+    </choice>
+    <!--+==========================+
+        |    Package References    |
+        +==========================+-->
+    <pkg-ref id="com.getmantra.pkg.zhcn" version="1.0" installKBytes="8769">file:./Contents/Packages/Chinese%20-%20Simplified.pkg</pkg-ref>
+    <pkg-ref id="com.getmantra.pkg.en" version="1.0" installKBytes="9342">file:./Contents/Packages/English.pkg</pkg-ref>
+    <pkg-ref id="com.getmantra.pkg.pt" version="1.0" installKBytes="10189">file:./Contents/Packages/Portuguese.pkg</pkg-ref>
+    <pkg-ref id="com.getmantra.pkg.Mantra" version="1.0" installKBytes="148300">file:./Contents/Packages/Mantra.pkg</pkg-ref>
+    <pkg-ref id="com.getmantra.pkg.es" version="1.0" installKBytes="8978">file:./Contents/Packages/Spanish.pkg</pkg-ref>
+    <pkg-ref id="com.getmantra.pkg.fr" version="1.0" installKBytes="10178">file:./Contents/Packages/French.pkg</pkg-ref>
+    <pkg-ref id="com.getmantra.pkg.ru" version="1.0" installKBytes="10721">file:./Contents/Packages/Russian.pkg</pkg-ref>
+    <pkg-ref id="com.getmantra.pkg.tr" version="1.0" installKBytes="8748">file:./Contents/Packages/Turkish.pkg</pkg-ref>
+    <pkg-ref id="com.getmantra.pkg.zhtw" version="1.0" installKBytes="9359">file:./Contents/Packages/Chinese%20-%20Traditional.pkg</pkg-ref>
+    <pkg-ref id="com.getmantra.pkg.ar" version="1.0" installKBytes="8765">file:./Contents/Packages/Arabic.pkg</pkg-ref>
+    <!--+==========================+
+        |    JavaScript Scripts    |
+        +==========================+-->
+    <script>
+
+	const __IC_FLAT_DISTRIBUTION__=false;
+	const IC_DISK_TYPE_DESTINATION=0;
+	const IC_DISK_TYPE_STARTUP_DISK=1;
+	const IC_OS_DISTRIBUTION_TYPE_ANY=0;
+	const IC_OS_DISTRIBUTION_TYPE_CLIENT=1;
+	const IC_OS_DISTRIBUTION_TYPE_SERVER=2;
+
+	const IC_CPU_ARCHITECTURE_ANY=0;
+	const IC_CPU_ARCHITECTURE_POWERPC=18;
+	const IC_CPU_ARCHITECTURE_INTEL=7;
+	const IC_CPU_ARCHITECTURE_TYPE_ANY=0;
+	const IC_CPU_ARCHITECTURE_TYPE_32=1;
+	const IC_CPU_ARCHITECTURE_TYPE_64=2;
+
+	function IC_CheckOS(inDiskType,inMustBeInstalled,inMinimumVersion,inDistributionType)
+	{
+		var tOSVersion=undefined;
+		
+		/* Check Minimum Version */
+		
+		if (inDiskType==IC_DISK_TYPE_DESTINATION)
+		{
+			if (my.target.systemVersion!=undefined)
+			{
+				tOSVersion=my.target.systemVersion.ProductVersion;
+			}
+			
+			/* Check if no OS is installed on the potential target */
+			
+			if (tOSVersion==undefined)
+			{
+				return (inMustBeInstalled==false);
+			}
+		}
+		else
+		{
+			tOSVersion=system.version.ProductVersion;
+		}
+		
+		if (system.compareVersions(tOSVersion,inMinimumVersion)==-1)
+		{
+			return false;
+		}
+		
+		/* Check Distribution Type */
+		
+		if (inDistributionType!=IC_OS_DISTRIBUTION_TYPE_ANY)
+		{
+			var tIsServer;
+			
+			if (inDiskType==IC_DISK_TYPE_DESTINATION)
+			{
+				tIsServer=system.files.fileExistsAtPath(my.target.mountpoint+'/System/Library/CoreServices/ServerVersion.plist');
+			}
+			else
+			{
+				tIsServer=system.files.fileExistsAtPath('/System/Library/CoreServices/ServerVersion.plist');
+			}
+			
+			if (inDistributionType==IC_OS_DISTRIBUTION_TYPE_CLIENT &amp;&amp; tIsServer==true)
+			{
+				return false;
+			}
+			
+			if (inDistributionType==IC_OS_DISTRIBUTION_TYPE_SERVER &amp;&amp; tIsServer==false)
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
+	function IC_CheckCPU(inMinimumCoresCount,inSupportedArchitecture,inSupportedPowerPCArchitectureType,inSupportedIntelArchitectureType,inMinimumFrequency)
+	{
+		/* Check Minimum Core Count */
+		
+		if (system.sysctl('hw.ncpu')>=inMinimumCoresCount)
+		{
+			var tArchitecture;
+			var t64BitSupport;
+			
+			tArchitecture=system.sysctl('hw.cputype');
+			
+			/* Check Architecture */
+			
+			if (inSupportedArchitecture!=IC_CPU_ARCHITECTURE_ANY)
+			{
+				if (inSupportedArchitecture!=tArchitecture)
+				{
+					return false;
+				}
+			}
+			
+			/* Check Architecture Type */
+			
+			t64BitSupport=system.sysctl('hw.cpu64bit_capable');
+			
+			if (tArchitecture==IC_CPU_ARCHITECTURE_POWERPC)
+			{
+				if ((inSupportedPowerPCArchitectureType==IC_CPU_ARCHITECTURE_TYPE_32 &amp;&amp; t64BitSupport==1) ||
+					(inSupportedPowerPCArchitectureType==IC_CPU_ARCHITECTURE_TYPE_64 &amp;&amp; t64BitSupport==0))
+				{
+					return false;
+				}
+			}
+			else if (tArchitecture==IC_CPU_ARCHITECTURE_INTEL)
+			{
+				if ((inSupportedIntelArchitectureType==IC_CPU_ARCHITECTURE_TYPE_32 &amp;&amp; t64BitSupport==1) ||
+					(inSupportedIntelArchitectureType==IC_CPU_ARCHITECTURE_TYPE_64 &amp;&amp; t64BitSupport==0))
+				{
+					return false;
+				}
+			}
+			
+			/* Check Minimum CPU Frequency */
+			
+			if (system.sysctl('hw.cpufrequency_max')>=inMinimumFrequency)
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	function installation_check()
+	{
+		var tResult;
+
+		tResult=IC_CheckOS(IC_DISK_TYPE_STARTUP_DISK,true,'10.5',IC_OS_DISTRIBUTION_TYPE_ANY);
+
+		if (tResult==false)
+		{
+			my.result.title = system.localizedStandardStringWithFormat('InstallationCheckError', system.localizedString('DISTRIBUTION_TITLE'));
+			my.result.message = ' ';
+			my.result.type = 'Fatal';
+		}
+
+		if (tResult==true)
+		{
+			tResult=IC_CheckCPU(1,IC_CPU_ARCHITECTURE_INTEL,IC_CPU_ARCHITECTURE_TYPE_ANY,IC_CPU_ARCHITECTURE_TYPE_ANY,866666);
+
+			if (tResult==false)
+			{
+				my.result.title = system.localizedStandardStringWithFormat('InstallationCheckError', system.localizedString('DISTRIBUTION_TITLE'));
+				my.result.message = ' ';
+				my.result.type = 'Warn';
+			}
+		}
+
+		return tResult;
+	}
+
+	function installer_choice_2_selected(isStart)
+	{
+		var tSelected;
+
+		tSelected=(((((!choices.installer_choice_3.selected &amp;&amp; !choices.installer_choice_4.selected) &amp;&amp; !choices.installer_choice_5.selected) &amp;&amp; !choices.installer_choice_5.selected) &amp;&amp; !choices.installer_choice_6.selected) &amp;&amp; (((!choices.installer_choice_8.selected &amp;&amp; !choices.installer_choice_9.selected) &amp;&amp; !choices.installer_choice_10.selected) &amp;&amp; (!choices.installer_choice_7.selected &amp;&amp; choices.installer_choice_1.selected)));
+
+		if (isStart==true)
+		{
+			return tSelected;
+		}
+
+		return (tSelected &amp;&amp; my.choice.selected);
+	}
+
+	function installer_choice_3_selected(isStart)
+	{
+		var tSelected;
+
+		tSelected=(!choices.installer_choice_2.enabled &amp;&amp; ((!choices.installer_choice_4.enabled &amp;&amp; !choices.installer_choice_5.enabled) &amp;&amp; !choices.installer_choice_6.enabled));
+
+		if (isStart==true)
+		{
+			return tSelected;
+		}
+
+		return (tSelected &amp;&amp; my.choice.selected);
+	}
+
+	function installer_choice_4_selected(isStart)
+	{
+		var tSelected;
+
+		tSelected=(!choices.installer_choice_2.enabled &amp;&amp; (!choices.installer_choice_3.enabled &amp;&amp; ((!choices.installer_choice_5.enabled &amp;&amp; (!choices.installer_choice_9.enabled &amp;&amp; !choices.installer_choice_10.enabled)) &amp;&amp; (!choices.installer_choice_6.enabled &amp;&amp; (!choices.installer_choice_7.enabled &amp;&amp; !choices.installer_choice_8.enabled)))));
+
+		if (isStart==true)
+		{
+			return tSelected;
+		}
+
+		return (tSelected &amp;&amp; my.choice.selected);
+	}
+
+	function installer_choice_5_selected(isStart)
+	{
+		var tSelected;
+
+		tSelected=((!choices.installer_choice_2.enabled &amp;&amp; (!choices.installer_choice_3.enabled &amp;&amp; (((!choices.installer_choice_7.enabled &amp;&amp; !choices.installer_choice_8.enabled) &amp;&amp; !choices.installer_choice_9.enabled) &amp;&amp; !choices.installer_choice_10.enabled))) &amp;&amp; (!choices.installer_choice_4.enabled &amp;&amp; !choices.installer_choice_6.enabled));
+
+		if (isStart==true)
+		{
+			return tSelected;
+		}
+
+		return (tSelected &amp;&amp; my.choice.selected);
+	}
+
+	function installer_choice_6_selected(isStart)
+	{
+		var tSelected;
+
+		tSelected=(!choices.installer_choice_2.enabled &amp;&amp; (!choices.installer_choice_3.enabled &amp;&amp; ((!choices.installer_choice_4.enabled &amp;&amp; (((!choices.installer_choice_5.enabled &amp;&amp; !choices.installer_choice_8.enabled) &amp;&amp; !choices.installer_choice_9.enabled) &amp;&amp; !choices.installer_choice_10.enabled)) &amp;&amp; !choices.installer_choice_7.enabled)));
+
+		if (isStart==true)
+		{
+			return tSelected;
+		}
+
+		return (tSelected &amp;&amp; my.choice.selected);
+	}
+
+	function installer_choice_7_selected(isStart)
+	{
+		var tSelected;
+
+		tSelected=(!choices.installer_choice_1.enabled &amp;&amp; !choices.installer_choice_2.enabled);
+
+		if (isStart==true)
+		{
+			return tSelected;
+		}
+
+		return (tSelected &amp;&amp; my.choice.selected);
+	}
+
+	function installer_choice_8_selected(isStart)
+	{
+		var tSelected;
+
+		tSelected=(((((((!choices.installer_choice_2.enabled &amp;&amp; !choices.installer_choice_3.enabled) &amp;&amp; !choices.installer_choice_7.enabled) &amp;&amp; !choices.installer_choice_9.enabled) &amp;&amp; !choices.installer_choice_10.enabled) &amp;&amp; !choices.installer_choice_5.enabled) &amp;&amp; !choices.installer_choice_6.enabled) &amp;&amp; !choices.installer_choice_4.enabled);
+
+		if (isStart==true)
+		{
+			return tSelected;
+		}
+
+		return (tSelected &amp;&amp; my.choice.selected);
+	}
+
+	function installer_choice_9_selected(isStart)
+	{
+		var tSelected;
+
+		tSelected=(((((!choices.installer_choice_2.enabled &amp;&amp; !choices.installer_choice_3.enabled) &amp;&amp; !choices.installer_choice_8.enabled) &amp;&amp; !choices.installer_choice_10.enabled) &amp;&amp; !choices.installer_choice_7.enabled) &amp;&amp; ((!choices.installer_choice_4.enabled &amp;&amp; !choices.installer_choice_5.enabled) &amp;&amp; !choices.installer_choice_6.enabled));
+
+		if (isStart==true)
+		{
+			return tSelected;
+		}
+
+		return (tSelected &amp;&amp; my.choice.selected);
+	}
+
+	function installer_choice_10_selected(isStart)
+	{
+		var tSelected;
+
+		tSelected=(!choices.installer_choice_2.enabled &amp;&amp; ((((((!choices.installer_choice_3.enabled &amp;&amp; !choices.installer_choice_4.enabled) &amp;&amp; !choices.installer_choice_8.enabled) &amp;&amp; !choices.installer_choice_9.enabled) &amp;&amp; !choices.installer_choice_5.enabled) &amp;&amp; !choices.installer_choice_7.enabled) &amp;&amp; !choices.installer_choice_6.enabled));
+
+		if (isStart==true)
+		{
+			return tSelected;
+		}
+
+		return (tSelected &amp;&amp; my.choice.selected);
+	}
+
+    </script>
+    <domains enable_currentUserHome="true"/>
+</installer-script>
